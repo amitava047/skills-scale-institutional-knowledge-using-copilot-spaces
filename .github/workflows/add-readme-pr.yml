@@ -61,4 +61,5 @@ EOF
             Refs #2
           head: docs/add-readme
           base: main
-          reviewers: amitava047
+          reviewers:
+            - amitava047
