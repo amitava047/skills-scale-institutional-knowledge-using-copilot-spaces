@@ -1,0 +1,64 @@
+name: Create OctoAcme README PR
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Create README file
+        run: |
+          mkdir -p docs
+          cat > docs/README.md <<'EOF'
+# OctoAcme Project Management Docs
+
+## Overview
+
+The OctoAcme project management framework ensures projects flow smoothly from kickoff to delivery through a transparent, repeatable lifecycle. Projects start with clear need statements, measurable success metrics, and stakeholder alignment captured in a one-pager. Planning breaks work into actionable backlog items with defined acceptance criteria, estimates, risks, and a Definition of Done—all documented and visible on the project board.
+
+Execution relies on small pull requests, automated CI testing, and a Kanban/Scrum workflow with board columns from Backlog to Done. Roles are clearly documented: Product Managers drive outcomes and measure success, Project Managers coordinate delivery and risk, Developers implement and test, and QA validates new features and releases. Communication is regular and structured—standups, delivery syncs, and stakeholder updates—utilizing template-based reporting and clear escalation paths.
+
+Quality assurance is woven throughout: thorough unit, integration, and acceptance tests; mandatory CI checks; and pre-release smoke testing with rollback playbooks. Retrospectives after milestones or incidents feed concrete improvements into future work, fostering an iterative learning culture. Documenting procedures ensures onboarding is fast and repeatable, bottlenecks are exposed, and all team members share equal access to the knowledge base.
+
+This README serves as the entry point to all project management documentation, with links below for easy navigation and maintenance.
+
+## Process Documentation
+
+- [Project Management Overview](./octoacme-project-management-overview.md)
+- [Project Initiation Guide](./octoacme-project-initiation.md)
+- [Project Planning](./octoacme-project-planning.md)
+- [Execution & Tracking](./octoacme-execution-and-tracking.md)
+- [Risk Management & Communication](./octoacme-risks-and-communication.md)
+- [Release & Deployment Guide](./octoacme-release-and-deployment.md)
+- [Retrospective & Continuous Improvement](./octoacme-retrospective-and-continuous-improvement.md)
+- [Roles and Personas](./octoacme-roles-and-personas.md)
+
+Keep this README up to date as new practices are validated or new documents are added.
+EOF
+      - name: Set up git user
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: Create branch and commit
+        run: |
+          git checkout -b docs/add-readme
+          git add docs/README.md
+          git commit -m "docs: add project management README to docs/"
+          git push -u origin docs/add-readme
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          title: "docs: add project management README to docs/"
+          body: |
+            Add a README summarizing project management process and linking all docs.
+
+            Refs #2
+          head: docs/add-readme
+          base: main
+          reviewers: amitava047
